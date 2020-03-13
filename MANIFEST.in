@@ -1,6 +1,6 @@
-include Xclusion_criteria/resources/newblooms.all.fasta
-include Xclusion_criteria/tests/metadata/test_md/md_colons.tsv
-include Xclusion_criteria/tests/metadata/test_md/md_commas.tsv
-include Xclusion_criteria/tests/metadata/test_md/md_tabs.tsv
-include Xclusion_criteria/tests/metadata/test_md/md_missing.tsv
-include Xclusion_criteria/tests/metadata/test_md/md_upper.tsv
+include Xrbfetch/resources/newblooms.all.fasta
+include Xrbfetch/tests/metadata/test_md/md_colons.tsv
+include Xrbfetch/tests/metadata/test_md/md_commas.tsv
+include Xrbfetch/tests/metadata/test_md/md_tabs.tsv
+include Xrbfetch/tests/metadata/test_md/md_missing.tsv
+include Xrbfetch/tests/metadata/test_md/md_upper.tsv
