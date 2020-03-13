@@ -71,7 +71,7 @@ def xrbfetch(
         ids_read_counts, ids_feat_counts
     )
     # Remove duplicates (host and sample preps).
-    biom_nodup, metadata_edit_best = remove_duplicates(biom_tab_filt, metadata_filt)
+    biom_nodup, metadata_edit_best = remove_duplicates(biom_tab_filt, metadata_filt, unique)
     # Update the biom sample name.
     biom_updated = update_sample_name(update, biom_nodup)
     # write the metadata and the biom table outputs

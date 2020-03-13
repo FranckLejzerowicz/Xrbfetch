@@ -117,7 +117,9 @@ def keep_the_best_host_subject_id_sample(metadata_edit: pd.DataFrame) -> pd.Data
     return metadata_edit_host_out
 
 
-def remove_duplicates(biom_tab_filt: biom.table, metadata_filt: pd.DataFrame) -> tuple:
+def remove_duplicates(biom_tab_filt: biom.table,
+                      metadata_filt: pd.DataFrame,
+                      unique: bool) -> tuple:
     """
     Remove duplicates (host and sample preps).
 
@@ -128,6 +130,8 @@ def remove_duplicates(biom_tab_filt: biom.table, metadata_filt: pd.DataFrame) ->
         and with a min number of reads per sample.
     metadata_filt : pd.DataFrame
         Corresponding metadata table.
+    unique : bool
+        Whether to keep a unique sample per host or not.
 
     Returns
     -------
@@ -138,14 +142,18 @@ def remove_duplicates(biom_tab_filt: biom.table, metadata_filt: pd.DataFrame) ->
     metadata_edit_best : pd.DataFrame
         Corresponding metadata table.
     """
-    print(' - Remove duplicates...', end='')
-    metadata_edit = add_edit_and_working_sample_name(metadata_filt)
-    metadata_edit_host = keep_the_best_host_subject_id_sample(metadata_edit)
-    metadata_edit_best = keep_the_best_root_sample_name_sample(metadata_edit_host)
-    biom_nodup = biom_tab_filt.filter(
-        ids_to_keep=metadata_edit_best['orig_sample_name'].tolist(),
-        axis='sample').copy()
-    biom_nodup.remove_empty(axis='observation', inplace=True)
-    print('Done')
-    return biom_nodup, metadata_edit_best
+    if unique:
+        print(' - Remove duplicates...', end='')
+        metadata_edit = add_edit_and_working_sample_name(metadata_filt)
+        metadata_edit_host = keep_the_best_host_subject_id_sample(metadata_edit)
+        metadata_edit_best = keep_the_best_root_sample_name_sample(metadata_edit_host)
+        biom_nodup = biom_tab_filt.filter(
+            ids_to_keep=metadata_edit_best['orig_sample_name'].tolist(),
+            axis='sample').copy()
+        biom_nodup.remove_empty(axis='observation', inplace=True)
+        print('Done')
+        return biom_nodup, metadata_edit_best
+    else:
+        return biom_tab_filt, metadata_filt
+
 
