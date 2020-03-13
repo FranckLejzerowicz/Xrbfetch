@@ -42,17 +42,17 @@ def write_outputs(
     redbiom_samples : str
         Path to the file containing the samples used for fetching.
     """
-    print(' - Write files:\n')
+    print(' - Write files:')
     if not isdir(dirname(o_metadata_file)):
         os.makedirs(dirname(o_metadata_file))
     metadata_edit_best.to_csv(o_metadata_file, index=False, sep='\t')
-    print(' -', o_metadata_file)
+    print('   *', o_metadata_file)
 
     if not isdir(dirname(o_biom_file)):
         os.makedirs(dirname(o_biom_file))
     with biom_open(o_biom_file, 'w') as f:
         biom_updated.to_hdf5(f, 'Xrbfetch')
-    print(' -', o_biom_file)
+    print('   *', o_biom_file)
     os.remove(redbiom_output)
     os.remove(redbiom_samples)
 
