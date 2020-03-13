@@ -48,6 +48,7 @@ def update_sample_name(update: bool, biom_nodup: biom.table) -> biom.table:
             else:
                 updated_sam = '.'.join(sam.split('.')[:2])[:-1]
             ids_map[sam] = updated_sam
+        print(ids_map)
         biom_nodup.update_ids(id_map=ids_map, axis='sample', inplace=True)
         print('Done')
     return biom_nodup
@@ -104,6 +105,7 @@ def filter_reads(
         axis = 'observation', inplace=True
     )
     print('Done')
+    print(' > %s samples' % len(metadata_filt.orig_sample_name.tolist()))
     return biom_tab_filt, metadata_filt
 
 
@@ -232,7 +234,7 @@ def solve_ambiguous_preps(
         Number of features per sample.
     """
     ids = biom_tab.ids(axis='sample')
-
+    print(' > %s samples' % len(ids))
     print(' - Count reads per sample... ', end='')
     read_counts = biom_tab.sum(axis='sample')
     print('Done')
@@ -274,12 +276,13 @@ def solve_ambiguous_preps(
                         ambi_selection.append(read_count_max_samples[0])
         print('Done')
 
-        ambi_selection_noPrep = set(['.'.join(x.split('.')[:-1]) for x in ambi_selection])
-        non_ambi = [x for x in ids if '.'.join(x.split('.')[:-1]) not in ambi_selection_noPrep]
-        ids_to_keep = ambi_selection + non_ambi
-        print(' - Filter biom for best sample... ', end='')
-        biom_tab.filter(ids_to_keep=ids_to_keep, axis='sample', inplace=True)
-        biom_tab.remove_empty(axis='observation', inplace=True)
-        print('Done')
+    ambi_selection_noPrep = set(['.'.join(x.split('.')[:-1]) for x in ambi_selection])
+    non_ambi = [x for x in ids if '.'.join(x.split('.')[:-1]) not in ambi_selection_noPrep]
+    ids_to_keep = ambi_selection + non_ambi
+    print(' - Filter biom for best sample... ', end='')
+    biom_tab.filter(ids_to_keep=ids_to_keep, axis='sample', inplace=True)
+    biom_tab.remove_empty(axis='observation', inplace=True)
+    print('Done')
+    print(' > %s samples' % len(ids_to_keep))
     return biom_tab, ids_read_counts, ids_feat_counts
 
