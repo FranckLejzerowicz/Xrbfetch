@@ -18,7 +18,9 @@ def write_outputs(
         o_biom_file: str,
         o_metadata_file: str,
         biom_updated: biom.table,
-        metadata_edit_best: pd.DataFrame) -> None:
+        metadata_edit_best: pd.DataFrame,
+        redbiom_output: str,
+        redbiom_samples: str) -> None:
     """
     Write the metadata and the biom table outputs.
 
@@ -35,6 +37,10 @@ def write_outputs(
         with samples re-named as per AGP system.
     metadata_edit_best : pd.DataFrame
         Corresponding metadata table.
+    redbiom_output : str
+        Path to the biom table returned by redbiom.
+    redbiom_samples : str
+        Path to the file containing the samples used for fetching.
     """
     print(' - Write files:\n')
     if not isdir(dirname(o_metadata_file)):
@@ -47,6 +53,8 @@ def write_outputs(
     with biom_open(o_biom_file, 'w') as f:
         biom_updated.to_hdf5(f, 'Xrbfetch')
     print(' -', o_biom_file)
+    os.remove(redbiom_output)
+    os.remove(redbiom_samples)
 
 
 def read_meta_pd(metadata_file: str) -> pd.DataFrame:

@@ -88,9 +88,9 @@ def filter_reads(
     ids_read_feat_counts_pd = pd.DataFrame([
         ['.'.join(ID.split('.')[:-1]), ID.split('.')[-1],
          ids_read_counts[ID], ids_feat_counts[ID], ID] for ID in ids],
-        columns = ['#SampleID', 'qiita_prep_id', 'read_count',
+        columns = ['sample_name', 'qiita_prep_id', 'read_count',
                    'feature_count', 'orig_sample_name'])
-    metadata_no_ambi = metadata.merge(ids_read_feat_counts_pd, on='#SampleID', how='right')
+    metadata_no_ambi = metadata.merge(ids_read_feat_counts_pd, on='sample_name', how='right')
     print('Done')
 
     # Filter to keep only the samples with min number reads
@@ -110,7 +110,7 @@ def filter_reads(
 def run_redbiom_fetch(
         metadata: pd.DataFrame,
         m_metadata_file: str,
-        p_redbiom_context: str) -> str:
+        p_redbiom_context: str) -> tuple:
     """
     Fetch the samples using RedBiom.
 
@@ -126,7 +126,9 @@ def run_redbiom_fetch(
     Returns
     -------
     redbiom_output : str
-        The biom table returned by redbiom.
+        Path to the biom table returned by redbiom.
+    redbiom_samples : str
+        Path to the file containing the samples used for fetching.
     """
     redbiom_samples = '%s_redbiom_sams.tmp' % splitext(m_metadata_file)[0]
     redbiom_output = '%s_redbiom.biom' % splitext(m_metadata_file)[0]
@@ -152,7 +154,7 @@ def run_redbiom_fetch(
         subprocess.call(cmd)
         print(' Done')
         subprocess.call(['rm', redbiom_samples])
-    return redbiom_output
+    return redbiom_output, redbiom_samples
 
 
 def remove_blooms(redbiom_output: str, p_bloom_sequences: str) -> tuple:
@@ -252,24 +254,25 @@ def solve_ambiguous_preps(
     if json_ambi:
         print(' - Get best samples from ambiguous redbiom results... ', end='')
         for sam, amb_sams in json_ambi.items():
-            dict_amb_sams_read_counts = {}
-            dict_amb_sams_feat_counts = {}
-            amb_sams_fixes = ['%s.%s' % (x.split('_')[1], x.split('_')[0]) for x in amb_sams]
-            amb_sams_fixes_kept = [x for x in amb_sams_fixes if x not in biom_tab_removed_ids]
-            if len(amb_sams_fixes_kept):
-                for amb_sam_id in amb_sams_fixes_kept:
-                    dict_amb_sams_read_counts[amb_sam_id] = ids_read_counts[amb_sam_id]
-                    dict_amb_sams_feat_counts[amb_sam_id] = ids_feat_counts[amb_sam_id]
+            if isinstance(amb_sams, list):
+                dict_amb_sams_read_counts = {}
+                dict_amb_sams_feat_counts = {}
+                amb_sams_fixes = ['%s.%s' % (x.split('_')[1], x.split('_')[0]) for x in amb_sams]
+                amb_sams_fixes_kept = [x for x in amb_sams_fixes if x not in biom_tab_removed_ids]
+                if len(amb_sams_fixes_kept):
+                    for amb_sam_id in amb_sams_fixes_kept:
+                        dict_amb_sams_read_counts[amb_sam_id] = ids_read_counts[amb_sam_id]
+                        dict_amb_sams_feat_counts[amb_sam_id] = ids_feat_counts[amb_sam_id]
 
-                read_count_max = max([x for x in dict_amb_sams_read_counts.values()])
-                read_count_max_samples = [x for x, n in dict_amb_sams_read_counts.items() if n == read_count_max]
-                if len(read_count_max_samples) > 1:
-                    feat_count_max = max([dict_amb_sams_feat_counts[feat] for feat in read_count_max_samples])
-                    feat_count_max_samples = [x for x, n in dict_amb_sams_feat_counts.items() if
-                                              n == feat_count_max and x in read_count_max_samples]
-                    ambi_selection.append(feat_count_max_samples[0])
-                else:
-                    ambi_selection.append(read_count_max_samples[0])
+                    read_count_max = max([x for x in dict_amb_sams_read_counts.values()])
+                    read_count_max_samples = [x for x, n in dict_amb_sams_read_counts.items() if n == read_count_max]
+                    if len(read_count_max_samples) > 1:
+                        feat_count_max = max([dict_amb_sams_feat_counts[feat] for feat in read_count_max_samples])
+                        feat_count_max_samples = [x for x, n in dict_amb_sams_feat_counts.items() if
+                                                  n == feat_count_max and x in read_count_max_samples]
+                        ambi_selection.append(feat_count_max_samples[0])
+                    else:
+                        ambi_selection.append(read_count_max_samples[0])
         print('Done')
 
         ambi_selection_noPrep = set(['.'.join(x.split('.')[:-1]) for x in ambi_selection])

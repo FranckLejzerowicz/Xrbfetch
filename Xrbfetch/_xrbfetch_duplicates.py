@@ -100,7 +100,7 @@ def keep_the_best_host_subject_id_sample(metadata_edit: pd.DataFrame) -> pd.Data
     best_samples = []
     metadata_edit_host = metadata_edit.copy()
     for host_subject_id, subtab in metadata_edit_host.groupby('host_subject_id'):
-        curr_subtab = subtab[['#SampleID', 'read_count', 'feature_count']]
+        curr_subtab = subtab[['sample_name', 'read_count', 'feature_count']]
         max_read_count_sample = curr_subtab.loc[curr_subtab.read_count == max(curr_subtab.read_count)]
         if max_read_count_sample.shape[0] > 1:
             curr_sample_tab = max_read_count_sample.loc[

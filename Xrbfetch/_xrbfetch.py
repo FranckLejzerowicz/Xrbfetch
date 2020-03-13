@@ -58,7 +58,8 @@ def xrbfetch(
     # Read metadata with first column as index.
     metadata = read_meta_pd(m_metadata_file)
     # Fetch the samples using RedBiom
-    redbiom_output = run_redbiom_fetch(metadata, m_metadata_file, p_redbiom_context)
+    redbiom_output, redbiom_samples = run_redbiom_fetch(
+        metadata, m_metadata_file, p_redbiom_context)
     # Remove the bloom sequences from the fetched samples.
     biom_tab, biom_tab_removed_ids = remove_blooms(redbiom_output, p_bloom_sequences)
     # Pick the best prep sample per sample to solve the ambiguous fetched results.
