@@ -8,6 +8,10 @@ Fetch microbiome tables from Qiita using RedBiom based on a metadata file and fi
 ## Installation
 
 ```
+pip install --upgrade git+https://github.com/FranckLejzerowicz/Xrbfetch.git
+```
+
+```
 git clone https://github.com/FranckLejzerowicz/Xrbfetch.git
 cd Xrbfetch
 pip install -e .
