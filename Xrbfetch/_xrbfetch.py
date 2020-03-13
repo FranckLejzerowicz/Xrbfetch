@@ -75,4 +75,5 @@ def xrbfetch(
     # Update the biom sample name.
     biom_updated = update_sample_name(update, biom_nodup)
     # write the metadata and the biom table outputs
-    write_outputs(o_biom_file, o_metadata_file, biom_updated, metadata_edit_best)
+    write_outputs(o_biom_file, o_metadata_file, biom_updated,
+                  metadata_edit_best,redbiom_output, redbiom_samples)
