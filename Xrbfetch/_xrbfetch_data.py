@@ -48,7 +48,6 @@ def update_sample_name(update: bool, biom_nodup: biom.table) -> biom.table:
             else:
                 updated_sam = '.'.join(sam.split('.')[:2])[:-1]
             ids_map[sam] = updated_sam
-        print(ids_map)
         biom_nodup.update_ids(id_map=ids_map, axis='sample', inplace=True)
         print('Done')
     return biom_nodup
