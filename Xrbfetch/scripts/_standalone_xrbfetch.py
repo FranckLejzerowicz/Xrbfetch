@@ -48,6 +48,15 @@ from Xrbfetch import __version__
     "--update/--no-update", default=True, show_default=True,
     help="Update the sample names to remove Qiita-prep info."
 )
+@click.option(
+    "--dim/--no-dim", default=True, show_default=True,
+    help="Add the number of samples in the final biom file name before "
+         "extension (e.g. for '-b out.biom' it becomes 'out_1000s.biom')."
+)
+@click.option(
+    "--verbose/--no-verbose", default=True, show_default=True,
+    help="Show missing, non-fetched samples and duplicates."
+)
 @click.version_option(__version__, prog_name="Xrbfetch")
 
 
@@ -58,8 +67,8 @@ def standalone_xrbfetch(
         p_redbiom_context,
         p_bloom_sequences,
         p_reads_filter,
-        unique,
-        update
+        unique, update,
+        dim, verbose
 ):
 
     xrbfetch(
@@ -69,8 +78,8 @@ def standalone_xrbfetch(
         p_redbiom_context,
         p_bloom_sequences,
         p_reads_filter,
-        unique,
-        update
+        unique, update,
+        dim, verbose
     )
 
 

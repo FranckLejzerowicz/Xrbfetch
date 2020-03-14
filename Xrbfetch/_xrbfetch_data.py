@@ -40,7 +40,6 @@ def update_sample_name(update: bool, biom_nodup: biom.table) -> biom.table:
         with samples re-named as per AGP system.
     """
     if update:
-        print(' - Update sample name to remove prep file info... ', end='')
         ids_map = {}
         for sam in biom_nodup.ids(axis='sample'):
             if str(sam.split('.')[1]).isdigit():
@@ -48,6 +47,7 @@ def update_sample_name(update: bool, biom_nodup: biom.table) -> biom.table:
             else:
                 updated_sam = '.'.join(sam.split('.')[:2])[:-1]
             ids_map[sam] = updated_sam
+        print(' - Update sample name to remove prep file info... ', end='')
         biom_nodup.update_ids(id_map=ids_map, axis='sample', inplace=True)
         print('Done')
     return biom_nodup
@@ -91,7 +91,7 @@ def filter_reads(
         columns = ['sample_name', 'qiita_prep_id', 'read_count',
                    'feature_count', 'orig_sample_name'])
     metadata_no_ambi = metadata.merge(ids_read_feat_counts_pd, on='sample_name', how='right')
-    print('Done')
+    print('Done -> %s samples in merged metadata' % metadata_no_ambi.shape[0])
 
     # Filter to keep only the samples with min number reads
     print(' - Filter biom for min %s reads per sample... ' % reads_filter, end='')
@@ -103,8 +103,7 @@ def filter_reads(
     biom_tab_filt.remove_empty(
         axis = 'observation', inplace=True
     )
-    print('Done')
-    print(' > %s samples' % len(metadata_filt.orig_sample_name.tolist()))
+    print('Done -> %s samples' % biom_tab_filt.shape[1])
     return biom_tab_filt, metadata_filt
 
 
@@ -151,27 +150,30 @@ def run_redbiom_fetch(
             '--context', context,
             '--output', redbiom_output
         ]
-        print('Fetching %s samples from RedBiom...' % metadata.shape[0], end='')
+        print('Fetching %s samples from RedBiom... ' % metadata.shape[0], end='')
         subprocess.call(cmd)
-        print(' Done')
+        print('Done')
     return redbiom_output, redbiom_samples
 
 
-def remove_blooms(redbiom_output: str, p_bloom_sequences: str) -> tuple:
+def remove_blooms(biom_tab: biom.table, biom_tab_sams: list,
+                  p_bloom_sequences: str) -> tuple:
     """
     Remove the bloom sequences from the fetched samples.
 
     Parameters
     ----------
+    biom_tab : biom.table
+        Feature table retrieved from redbiom.
+    biom_tab_sams : list
+        Samples of the feature table.
     p_bloom_sequences : str
         Fasta file containing the sequences known to bloom in fecal samples.
-    redbiom_output : str
-        The biom table returned by redbiom.
 
     Returns
     -------
     biom_tab : biom.table
-        Current data retrieved from redbiom, without blooms.
+        Feature table retrieved from redbiom, without blooms.
     biom_tab_removed_ids : list
         Samples ids removed as bloom dropouts.
     """
@@ -180,11 +182,6 @@ def remove_blooms(redbiom_output: str, p_bloom_sequences: str) -> tuple:
         bloom_sequences_fp = p_bloom_sequences
 
     bloom_seqs = set([x.strip() for x in open(bloom_sequences_fp).readlines() if x[0] != '>'])
-
-    print(' - Load biom table... ', end='')
-    biom_tab = biom.load_table(redbiom_output)
-    biom_tab_sams = set(biom_tab.ids(axis='sample'))
-    print('Done')
 
     in_out = {'in': [], 'out': []}
     for feature in biom_tab.ids(axis='observation'):
@@ -200,10 +197,8 @@ def remove_blooms(redbiom_output: str, p_bloom_sequences: str) -> tuple:
         inplace=True
     )
     biom_tab.remove_empty(axis='sample', inplace=True)
-    print('Done')
-
-    biom_tab_removed_ids = list(biom_tab_sams ^ set(biom_tab.ids(axis='sample')))
-    print(' -> %s dropout samples' % len(biom_tab_removed_ids))
+    biom_tab_removed_ids = list(set(biom_tab_sams) ^ set(biom_tab.ids(axis='sample')))
+    print('Done -> %s samples (%s dropouts)' % (biom_tab.shape[1], len(biom_tab_removed_ids)))
     return biom_tab, biom_tab_removed_ids
 
 
@@ -233,7 +228,6 @@ def solve_ambiguous_preps(
         Number of features per sample.
     """
     ids = biom_tab.ids(axis='sample')
-    print(' > %s samples' % len(ids))
     print(' - Count reads per sample... ', end='')
     read_counts = biom_tab.sum(axis='sample')
     print('Done')
@@ -273,7 +267,7 @@ def solve_ambiguous_preps(
                         ambi_selection.append(feat_count_max_samples[0])
                     else:
                         ambi_selection.append(read_count_max_samples[0])
-        print('Done')
+        print('Done -> %s ambiguous samples' % len(ambi_selection))
 
     ambi_selection_noPrep = set(['.'.join(x.split('.')[:-1]) for x in ambi_selection])
     non_ambi = [x for x in ids if '.'.join(x.split('.')[:-1]) not in ambi_selection_noPrep]
@@ -281,7 +275,6 @@ def solve_ambiguous_preps(
     print(' - Filter biom for best sample... ', end='')
     biom_tab.filter(ids_to_keep=ids_to_keep, axis='sample', inplace=True)
     biom_tab.remove_empty(axis='observation', inplace=True)
-    print('Done')
-    print(' > %s samples' % len(ids_to_keep))
+    print('Done -> %s samples' % len(ids_to_keep))
     return biom_tab, ids_read_counts, ids_feat_counts
 

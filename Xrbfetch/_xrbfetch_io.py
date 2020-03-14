@@ -11,7 +11,7 @@ import sys
 import biom
 import pandas as pd
 from biom.util import biom_open
-from os.path import dirname, isdir
+from os.path import dirname, isdir, splitext
 
 
 def write_outputs(
@@ -20,7 +20,8 @@ def write_outputs(
         biom_updated: biom.table,
         metadata_edit_best: pd.DataFrame,
         redbiom_output: str,
-        redbiom_samples: str) -> None:
+        redbiom_samples: str,
+        dim: bool) -> None:
     """
     Write the metadata and the biom table outputs.
 
@@ -41,7 +42,22 @@ def write_outputs(
         Path to the biom table returned by redbiom.
     redbiom_samples : str
         Path to the file containing the samples used for fetching.
+    dim : bool
+        Whether to add the number of samples in the final biom file name before extension or not.
     """
+    if dim:
+        n_sams = metadata_edit_best.shape[0]
+        o_metadata_file = '%s_%ss%s' % (
+            splitext(o_metadata_file)[0],
+            n_sams,
+            splitext(o_metadata_file)[1]
+        )
+        o_biom_file = '%s_%ss%s' % (
+            splitext(o_biom_file)[0],
+            n_sams,
+            splitext(o_biom_file)[1]
+        )
+
     print(' - Write files:')
     if not isdir(dirname(o_metadata_file)):
         os.makedirs(dirname(o_metadata_file))
@@ -55,6 +71,29 @@ def write_outputs(
     print('   *', o_biom_file)
     os.remove(redbiom_output)
     os.remove(redbiom_samples)
+
+
+def read_biom(redbiom_output: str) -> tuple:
+    """
+    Read biom file
+
+    Parameters
+    ----------
+    redbiom_output : str
+        The biom table returned by redbiom.
+
+    Returns
+    -------
+    biom_tab : biom.table
+        Feature table retrieved from redbiom.
+    biom_tab_sams : list
+        Samples of the feature table.
+    """
+    print(' - Load biom table... ', end='')
+    biom_tab = biom.load_table(redbiom_output)
+    biom_tab_sams = biom_tab.ids(axis='sample').tolist()
+    print('Done -> %s samples' % len(biom_tab_sams))
+    return biom_tab, biom_tab_sams
 
 
 def read_meta_pd(metadata_file: str) -> pd.DataFrame:
