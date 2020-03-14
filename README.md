@@ -7,14 +7,14 @@ Fetch microbiome tables from Qiita using RedBiom based on a metadata file and fi
 
 ## Installation
 
+For the first install:
 ```
-pip install --upgrade git+https://github.com/FranckLejzerowicz/Xrbfetch.git
+pip install git+https://github.com/FranckLejzerowicz/Xrbfetch.git
 ```
 
+and then if there are updates...
 ```
-git clone https://github.com/FranckLejzerowicz/Xrbfetch.git
-cd Xrbfetch
-pip install -e .
+pip install --upgrade git+https://github.com/FranckLejzerowicz/Xrbfetch.git
 ```
 
 *_Note that python and pip should be python3_
@@ -34,11 +34,31 @@ Only for samples named according to the AGP standard (i.e. `<study-id>.<9-digits
 
 ## Example
 
+- Running:
+
+    ```
+    Xrbfetch \
+        -m ./Xrbfetch/tests/metadata/metadata.tsv \
+        -o ./Xrbfetch/tests/output/metadata_out.tsv \
+        -b ./Xrbfetch/tests/output/featuredata.biom
+    ```
+    Would return `metadata_out_<number>s.tsv` and `featuredata_<number>s.tsv`
+
+- Running:
+
+    ```
+    Xrbfetch \
+        -m ./Xrbfetch/tests/metadata/metadata.tsv \
+        -o ./Xrbfetch/tests/output/metadata_out.tsv \
+        -b ./Xrbfetch/tests/output/featuredata.biom
+        --no-dim
+    ```
+    Would return `metadata_out.tsv` and `featuredata.tsv`
 
 
 ### Optional arguments
 
-``` 
+```
   -m, --m-metadata-file TEXT    Path to metadata file containing the samples
                                 to fetch and filter (must be in the first
                                 column).  [required]
@@ -57,6 +77,14 @@ Only for samples named according to the AGP standard (i.e. `<study-id>.<9-digits
                                 1500]
   --unique / --no-unique        Keep a unique sample per host (most read, or
                                 most features).  [default: True]
+  --update / --no-update        Update the sample names to remove Qiita-prep
+                                info.  [default: True]
+  --dim / --no-dim              Add the number of samples in the final biom
+                                file name before extension (e.g. for '-b
+                                out.biom' it becomes 'out_1000s.biom').
+                                [default: True]
+  --verbose / --no-verbose      Show missing, non-fetched samples and
+                                duplicates.  [default: True]
   --version                     Show the version and exit.
   --help                        Show this message and exit.
 ```
