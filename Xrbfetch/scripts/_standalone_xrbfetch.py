@@ -54,6 +54,10 @@ from Xrbfetch import __version__
          "extension (e.g. for '-b out.biom' it becomes 'out_1000s.biom')."
 )
 @click.option(
+    "--force/--no-force", default=False, show_default=True,
+    help="Re-fetch and not use an 'already-fetched' table."
+)
+@click.option(
     "--verbose/--no-verbose", default=True, show_default=True,
     help="Show missing, non-fetched samples and duplicates."
 )
@@ -68,7 +72,7 @@ def standalone_xrbfetch(
         p_bloom_sequences,
         p_reads_filter,
         unique, update,
-        dim, verbose
+        dim, force, verbose
 ):
 
     xrbfetch(
@@ -79,7 +83,7 @@ def standalone_xrbfetch(
         p_bloom_sequences,
         p_reads_filter,
         unique, update,
-        dim, verbose
+        dim, force, verbose
     )
 
 

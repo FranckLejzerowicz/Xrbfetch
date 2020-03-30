@@ -115,7 +115,8 @@ def filter_reads(
 def run_redbiom_fetch(
         metadata: pd.DataFrame,
         m_metadata_file: str,
-        p_redbiom_context: str) -> tuple:
+        p_redbiom_context: str,
+        force: bool) -> tuple:
     """
     Fetch the samples using RedBiom.
 
@@ -137,7 +138,7 @@ def run_redbiom_fetch(
     """
     redbiom_samples = '%s_redbiom_sams.tmp' % splitext(m_metadata_file)[0]
     redbiom_output = '%s_redbiom.biom' % splitext(m_metadata_file)[0]
-    if isfile(redbiom_output):
+    if not force and isfile(redbiom_output):
         print('Using an already generated biom file for this metadata file:\n '
               '-> %s (%s samples) <-' % (redbiom_output, metadata.shape[0]))
     else:

@@ -35,6 +35,7 @@ def xrbfetch(
         unique: bool,
         update: bool,
         dim: bool,
+        force: bool,
         verbose: bool) -> None:
     """
     Main script for fetching a metadata's samples on redbiom and then,
