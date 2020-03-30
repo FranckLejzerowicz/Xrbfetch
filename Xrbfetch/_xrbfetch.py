@@ -71,7 +71,7 @@ def xrbfetch(
 
     # Fetch the samples using RedBiom
     redbiom_output, redbiom_samples = run_redbiom_fetch(
-        metadata, m_metadata_file, p_redbiom_context)
+        metadata, m_metadata_file, p_redbiom_context, force)
 
     # Read biom file and show non fetched samples and replication amount
     biom_tab, biom_tab_sams = read_biom(redbiom_output)
