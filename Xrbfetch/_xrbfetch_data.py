@@ -86,8 +86,13 @@ def filter_reads(
     print(' - Merge reads and features counts to metadata... ', end='')
     ids = biom_tab_no_ambi.ids(axis = 'sample')
     ids_read_feat_counts_pd = pd.DataFrame([
-        ['.'.join(ID.split('.')[:-1]), ID.split('.')[-1],
-         ids_read_counts[ID], ids_feat_counts[ID], ID] for ID in ids],
+        [
+            '.'.join(ID.split('.')[:-1]),
+            ID.split('.')[-1],
+            ids_read_counts[ID],
+            ids_feat_counts[ID],
+            ID
+        ] for ID in ids],
         columns = ['sample_name', 'qiita_prep_id', 'read_count',
                    'feature_count', 'orig_sample_name'])
     metadata_no_ambi = metadata.merge(ids_read_feat_counts_pd, on='sample_name', how='right')
