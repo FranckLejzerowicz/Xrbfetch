@@ -85,8 +85,8 @@ def filter_reads(
     """
     print(' - Merge reads and features counts to metadata... ', end='')
     ids = biom_tab_no_ambi.ids(axis = 'sample')
-    columns = []
-    for col in ['sample_name', 'qiita_prep_id',
+    columns = ['sample_name']
+    for col in ['qiita_prep_id',
                 'read_count', 'feature_count',
                 'orig_sample_name']:
         if col not in metadata.columns:
