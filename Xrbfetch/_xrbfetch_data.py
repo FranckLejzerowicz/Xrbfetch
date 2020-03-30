@@ -85,6 +85,15 @@ def filter_reads(
     """
     print(' - Merge reads and features counts to metadata... ', end='')
     ids = biom_tab_no_ambi.ids(axis = 'sample')
+    columns = []
+    for col in ['sample_name', 'qiita_prep_id',
+                'read_count', 'feature_count',
+                'orig_sample_name']:
+        if col not in metadata.columns:
+            columns.append(col)
+        else:
+            columns.append('%s_fetchmerged' % col)
+
     ids_read_feat_counts_pd = pd.DataFrame([
         [
             '.'.join(ID.split('.')[:-1]),
@@ -93,16 +102,15 @@ def filter_reads(
             ids_feat_counts[ID],
             ID
         ] for ID in ids],
-        columns = ['sample_name', 'qiita_prep_id', 'read_count',
-                   'feature_count', 'orig_sample_name'])
+        columns = columns
+    )
+    ids_read_feat_counts_pd.columns = cols
     metadata_no_ambi = metadata.merge(ids_read_feat_counts_pd, on='sample_name', how='right')
-    print([x for x in metadata_no_ambi.columns if 'read_' in x])
-    print(gfds)
     print('Done -> %s samples in merged metadata' % metadata_no_ambi.shape[0])
 
     # Filter to keep only the samples with min number reads
     print(' - Filter biom for min %s reads per sample... ' % reads_filter, end='')
-    metadata_filt = metadata_no_ambi.loc[metadata_no_ambi['read_count'] >= reads_filter].copy()
+    metadata_filt = metadata_no_ambi.loc[metadata_no_ambi[columns[2]] >= reads_filter].copy()
     biom_tab_filt = biom_tab_no_ambi.filter(
         ids_to_keep = metadata_filt.orig_sample_name.tolist(),
         axis = 'sample'
