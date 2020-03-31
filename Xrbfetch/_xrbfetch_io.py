@@ -69,8 +69,8 @@ def write_outputs(
     with biom_open(o_biom_file, 'w') as f:
         biom_updated.to_hdf5(f, 'Xrbfetch')
     print('   *', o_biom_file)
-    # os.remove(redbiom_output)
-    # os.remove(redbiom_samples)
+    os.remove(redbiom_output)
+    os.remove(redbiom_samples)
 
 
 def read_biom(redbiom_output: str) -> tuple:
