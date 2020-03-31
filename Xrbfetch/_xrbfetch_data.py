@@ -166,6 +166,7 @@ def run_redbiom_fetch(
             '--output', redbiom_output
         ]
         print('Fetching %s samples from RedBiom... ' % metadata.shape[0], end='')
+        print(' '.join(cmd))
         subprocess.call(cmd)
         print('Done')
     return redbiom_output, redbiom_samples
