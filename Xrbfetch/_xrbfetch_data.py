@@ -87,7 +87,8 @@ def filter_reads(
     ids = biom_tab_no_ambi.ids(axis = 'sample')
     columns = ['sample_name']
     for col in ['qiita_prep_id',
-                'read_count', 'feature_count',
+                'read_count',
+                'feature_count',
                 'orig_sample_name']:
         if col not in metadata.columns:
             columns.append(col)
@@ -104,6 +105,7 @@ def filter_reads(
         ] for ID in ids],
         columns = columns
     )
+    print(ids_read_feat_counts_pd[:10])
     metadata_no_ambi = metadata.merge(ids_read_feat_counts_pd, on='sample_name', how='right')
     print('Done -> %s samples in merged metadata' % metadata_no_ambi.shape[0])
 

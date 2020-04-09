@@ -58,6 +58,10 @@ from Xrbfetch import __version__
     help="Re-fetch and not use an 'already-fetched' table."
 )
 @click.option(
+    "--simple/--no-simple", default=True, show_default=True,
+    help="Perform the steps using one-liners (less checks)."
+)
+@click.option(
     "--verbose/--no-verbose", default=True, show_default=True,
     help="Show missing, non-fetched samples and duplicates."
 )
@@ -72,7 +76,9 @@ def standalone_xrbfetch(
         p_bloom_sequences,
         p_reads_filter,
         unique, update,
-        dim, force, verbose
+        dim, force,
+        simple,
+        verbose
 ):
 
     xrbfetch(
@@ -83,7 +89,9 @@ def standalone_xrbfetch(
         p_bloom_sequences,
         p_reads_filter,
         unique, update,
-        dim, force, verbose
+        dim, force,
+        simple,
+        verbose
     )
 
 
