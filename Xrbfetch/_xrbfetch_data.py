@@ -117,7 +117,7 @@ def filter_reads(
     print(' - Filter biom for min %s reads per sample... ' % reads_filter, end='')
     metadata_filt = metadata_no_ambi.loc[metadata_no_ambi[columns[2]] >= reads_filter].copy()
     biom_tab_filt = biom_tab_no_ambi.filter(
-        ids_to_keep = metadata_filt.orig_sample_name.tolist(),
+        ids_to_keep = metadata_filt[columns[-1]].tolist(),
         axis = 'sample'
     ).copy()
     biom_tab_filt.remove_empty(
