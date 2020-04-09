@@ -122,13 +122,13 @@ def read_meta_pd(metadata_file: str) -> pd.DataFrame:
         print('no separator found among: "<tab>", ",", ";"\nExiting')
         sys.exit(1)
 
-    strs = {first_line[0]: 'str'}
+    strs = {first_line[0]: str}
     strs_up = {}
     for col in first_line:
         if 'qiita_prep_id' in col:
-            strs_up[col] = 'str'
+            strs_up[col] = str
         elif 'sample_name' in col:
-            strs_up[col] = 'str'
+            strs_up[col] = str
     strs.update(strs_up)
 
     metadata = pd.read_csv(metadata_file, header=0, sep=sep,
