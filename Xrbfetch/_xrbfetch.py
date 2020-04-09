@@ -76,6 +76,8 @@ def xrbfetch(
 
     # Read metadata with first column as index.
     metadata = read_meta_pd(m_metadata_file)
+    print(metadata[:4])
+    print(metadatfd)
 
     if simple:
         pass
