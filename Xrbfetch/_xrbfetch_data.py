@@ -105,8 +105,8 @@ def filter_reads(
         ] for ID in ids],
         columns = columns
     )
-    print(ids_read_feat_counts_pd[:10])
     metadata_no_ambi = metadata.merge(ids_read_feat_counts_pd, on='sample_name', how='right')
+    print(metadata_no_ambi[:10])
     print('Done -> %s samples in merged metadata' % metadata_no_ambi.shape[0])
 
     # Filter to keep only the samples with min number reads
