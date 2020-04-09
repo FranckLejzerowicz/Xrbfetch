@@ -90,9 +90,9 @@ def filter_reads(
                 'read_count',
                 'feature_count',
                 'orig_sample_name']:
-        if col not in metadata.columns:
+        if col in metadata.columns:
             metadata.drop(columns=col, inplace=True)
-            columns.append(col)
+        columns.append(col)
 
     ids_read_feat_counts_pd = pd.DataFrame([
         [
