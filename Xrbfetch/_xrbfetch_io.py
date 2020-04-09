@@ -130,6 +130,7 @@ def read_meta_pd(metadata_file: str) -> pd.DataFrame:
         elif 'orig_sample_name' in col:
             strs_up[col] = 'str'
     strs.update(strs_up)
+    print(strs)
 
     metadata = pd.read_csv(metadata_file, header=0, sep=sep,
                           dtype=strs, low_memory=False)
