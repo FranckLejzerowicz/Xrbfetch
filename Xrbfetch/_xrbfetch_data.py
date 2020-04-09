@@ -93,7 +93,10 @@ def filter_reads(
         if col not in metadata.columns:
             columns.append(col)
         else:
-            columns.append('%s_fetchmerged' % col)
+            new_col = '%s_fetchmerged' % col
+            columns.append(new_col)
+            if new_col in metadata.columns:
+                metadata.drop(columns=new_col, inplace=True)
 
     ids_read_feat_counts_pd = pd.DataFrame([
         [
@@ -106,7 +109,6 @@ def filter_reads(
         columns = columns
     )
     metadata_no_ambi = metadata.merge(ids_read_feat_counts_pd, on='sample_name', how='right')
-    print(metadata_no_ambi[:10])
     print('Done -> %s samples in merged metadata' % metadata_no_ambi.shape[0])
 
     # Filter to keep only the samples with min number reads
