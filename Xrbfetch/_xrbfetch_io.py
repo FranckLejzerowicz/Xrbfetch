@@ -116,14 +116,24 @@ def read_meta_pd(metadata_file: str) -> pd.DataFrame:
     header = line.strip()
     for sep in ['\t', ';', ',']:
         if len(header.split(sep))>1 and len(header.split(sep)) == (header.count(sep)+1):
-            first_col = line.split(sep)[0]
+            first_line = line.split(sep)
             break
     else:
         print('no separator found among: "<tab>", ",", ";"\nExiting')
         sys.exit(1)
+
+    strs = {first_line[0]: 'str'}
+    strs_up = {}
+    for col in first_line:
+        if 'qiita_prep_id' in col:
+            strs_up[col] = 'str'
+        elif 'orig_sample_name' in col:
+            strs_up[col] = 'str'
+    strs.update(strs_up)
+
     metadata = pd.read_csv(metadata_file, header=0, sep=sep,
-                          dtype={first_col: str}, low_memory=False)
-    metadata.rename(columns={first_col: 'sample_name'}, inplace=True)
+                          dtype=strs, low_memory=False)
+    metadata.rename(columns={first_line[0]: 'sample_name'}, inplace=True)
     metadata.columns = [x.lower() for x in metadata.columns]
     # remove NaN only columns
     metadata = metadata.loc[:,~metadata.isna().all()]
