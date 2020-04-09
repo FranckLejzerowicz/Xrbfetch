@@ -122,17 +122,17 @@ def read_meta_pd(metadata_file: str) -> pd.DataFrame:
         print('no separator found among: "<tab>", ",", ";"\nExiting')
         sys.exit(1)
 
-    # strs = {first_line[0]: 'str'}
-    # strs_up = {}
-    # for col in first_line:
-    #     if 'qiita_prep_id' in col:
-    #         strs_up[col] = 'str'
-    #     elif 'sample_name' in col:
-    #         strs_up[col] = 'str'
-    # strs.update(strs_up)
+    strs = {first_line[0]: 'str'}
+    strs_up = {}
+    for col in first_line:
+        if 'qiita_prep_id' in col:
+            strs_up[col] = 'str'
+        elif 'sample_name' in col:
+            strs_up[col] = 'str'
+    strs.update(strs_up)
 
     metadata = pd.read_csv(metadata_file, header=0, sep=sep,
-                          dtype=str, low_memory=False)
+                           dtype=strs, low_memory=False)
     metadata.rename(columns={first_line[0]: 'sample_name'}, inplace=True)
     metadata.columns = [x.lower() for x in metadata.columns]
     # remove NaN only columns

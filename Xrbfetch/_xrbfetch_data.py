@@ -91,12 +91,8 @@ def filter_reads(
                 'feature_count',
                 'orig_sample_name']:
         if col not in metadata.columns:
+            metadata.drop(columns=col, inplace=True)
             columns.append(col)
-        else:
-            new_col = '%s_fetchmerged' % col
-            columns.append(new_col)
-            if new_col in metadata.columns:
-                metadata.drop(columns=new_col, inplace=True)
 
     ids_read_feat_counts_pd = pd.DataFrame([
         [
@@ -115,9 +111,9 @@ def filter_reads(
 
     # Filter to keep only the samples with min number reads
     print(' - Filter biom for min %s reads per sample... ' % reads_filter, end='')
-    metadata_filt = metadata_no_ambi.loc[metadata_no_ambi[columns[2]] >= reads_filter].copy()
+    metadata_filt = metadata_no_ambi.loc[metadata_no_ambi['read_count'] >= reads_filter].copy()
     biom_tab_filt = biom_tab_no_ambi.filter(
-        ids_to_keep = metadata_filt[columns[-1]].tolist(),
+        ids_to_keep = metadata_filt['orig_sample_name'].tolist(),
         axis = 'sample'
     ).copy()
     biom_tab_filt.remove_empty(
