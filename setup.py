@@ -13,7 +13,7 @@ classes = """
     License :: OSI Approved :: BSD License
     Topic :: Scientific/Engineering
     Topic :: Scientific/Engineering :: Bio-Informatics
-    Programming Language :: Python :: 3.6
+    Programming Language :: Python :: 3.5
     Programming Language :: Python :: 3 :: Only
     Operating System :: Unix
     Operating System :: POSIX
@@ -61,5 +61,5 @@ setup(
     classifiers=classifiers,
     entry_points={'console_scripts': standalone},
     package_data={'Xrbfetch': ['resources/newblooms.all.fasta']},
-    python_requires='>=3.6',
+    python_requires='>=3.5',
 )
