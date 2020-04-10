@@ -104,8 +104,6 @@ def filter_reads(
         ] for ID in ids],
         columns = columns
     )
-    print(metadata[:3])
-    print(ids_read_feat_counts_pd[:3])
     metadata_no_ambi = metadata.merge(ids_read_feat_counts_pd, on='sample_name', how='right')
     print('Done -> %s samples in merged metadata' % metadata_no_ambi.shape[0])
 
