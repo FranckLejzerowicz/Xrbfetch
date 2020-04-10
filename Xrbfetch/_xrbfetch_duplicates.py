@@ -192,5 +192,5 @@ def check_fetched_samples(metadata: pd.DataFrame, biom_tab_sams: list) -> None:
     common_sams = set(metadata.sample_name) & set(biom_sams)
     only_meta = set(metadata.sample_name) ^ common_sams
     if len(only_meta):
-        print(' [Warning] %s samples not fecthed in any prep:' % len(only_meta))
+        print(' [Warning] %s samples not fetched in any prep:' % len(only_meta))
         print(', '.join(only_meta))
