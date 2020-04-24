@@ -91,7 +91,10 @@ def xrbfetch(
             check_replicates_amount(list(biom_tab_sams))
 
         # Remove the bloom sequences from the fetched samples.
-        biom_tab, biom_tab_removed_ids = remove_blooms(biom_tab, list(biom_tab_sams), p_bloom_sequences)
+        if p_bloom_sequences == 'stop':
+            biom_tab_removed_ids = []
+        else:
+            biom_tab, biom_tab_removed_ids = remove_blooms(biom_tab, list(biom_tab_sams), p_bloom_sequences)
 
         # Pick the best prep sample per sample to solve the ambiguous fetched results.
         biom_tab_no_ambi, ids_read_counts, ids_feat_counts = solve_ambiguous_preps(

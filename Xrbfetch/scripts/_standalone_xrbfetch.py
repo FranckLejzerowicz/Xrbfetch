@@ -58,7 +58,7 @@ from Xrbfetch import __version__
     help="Re-fetch and not use an 'already-fetched' table."
 )
 @click.option(
-    "--simple/--no-simple", default=True, show_default=True,
+    "--simple/--no-simple", default=False, show_default=True,
     help="Perform the steps using one-liners (less checks)."
 )
 @click.option(
