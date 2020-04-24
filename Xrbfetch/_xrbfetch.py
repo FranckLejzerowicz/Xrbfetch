@@ -91,7 +91,7 @@ def xrbfetch(
             check_replicates_amount(list(biom_tab_sams))
 
         # Remove the bloom sequences from the fetched samples.
-        if p_bloom_sequences == 'stop':
+        if p_bloom_sequences == 'no':
             biom_tab_removed_ids = []
         else:
             biom_tab, biom_tab_removed_ids = remove_blooms(biom_tab, list(biom_tab_sams), p_bloom_sequences)
