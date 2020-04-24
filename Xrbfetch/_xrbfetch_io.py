@@ -59,8 +59,9 @@ def write_outputs(
         )
 
     print(' - Write files:')
-    if not isdir(dirname(o_metadata_file)):
-        os.makedirs(dirname(o_metadata_file))
+    if o_metadata_file[0] == '/':
+        if not isdir(dirname((o_metadata_file))):
+            os.makedirs(dirname(o_metadata_file))
     metadata_edit_best.to_csv(o_metadata_file, index=False, sep='\t')
     print('   *', o_metadata_file)
 
