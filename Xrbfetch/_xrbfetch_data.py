@@ -12,7 +12,7 @@ import subprocess
 import pandas as pd
 import pkg_resources
 
-from os.path import isfile, splitext
+from os.path import abspath, isfile, splitext
 
 RESOURCES = pkg_resources.resource_filename('Xrbfetch', 'resources')
 
@@ -195,7 +195,8 @@ def remove_blooms(biom_tab: biom.table, biom_tab_sams: list,
     """
     bloom_sequences_fp = '%s/newblooms.all.fasta' % RESOURCES
     if p_bloom_sequences:
-        bloom_sequences_fp = p_bloom_sequences
+
+        bloom_sequences_fp = abspath(p_bloom_sequences)
 
     bloom_seqs = set([x.strip() for x in open(bloom_sequences_fp).readlines() if x[0] != '>'])
 
