@@ -6,6 +6,7 @@
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
 
+from os.path import abspath
 import pkg_resources
 
 from Xrbfetch._xrbfetch_io import read_meta_pd, read_biom, write_outputs
@@ -75,6 +76,10 @@ def xrbfetch(
     """
 
     # Read metadata with first column as index.
+    m_metadata_file = abspath(m_metadata_file)
+    o_metadata_file = abspath(o_metadata_file)
+    o_biom_file = abspath(o_biom_file)
+
     metadata = read_meta_pd(m_metadata_file)
 
     if simple:
