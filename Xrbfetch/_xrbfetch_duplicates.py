@@ -62,7 +62,7 @@ def keep_the_best_root_sample_name_sample(metadata_edit_host: pd.DataFrame) -> p
     """
     metadata_edit_best = metadata_edit_host.copy()
     best_samples = []
-    print('   * Keep the best working_sample_name per sample... ', end='')
+    print(' - Keep the best working_sample_name per sample... ', end='')
     for working_sample_name, subtab in metadata_edit_best.groupby('working_sample_name'):
         curr_subtab = subtab[['read_count', 'feature_count', 'edit_sample_name']]
         max_read_count_sample = curr_subtab.loc[curr_subtab.read_count == max(curr_subtab.read_count)]
@@ -98,7 +98,7 @@ def keep_the_best_host_subject_id_sample(metadata_edit: pd.DataFrame) -> pd.Data
         with only one sample per host.
     """
     best_samples = []
-    print('   * Keep the best host_subject_id per sample... ', end='')
+    print(' - Keep the best sample per host_subject_id... ', end='')
     metadata_edit_host = metadata_edit.copy()
     for host_subject_id, subtab in metadata_edit_host.groupby('host_subject_id'):
         curr_subtab = subtab[['sample_name', 'read_count', 'feature_count']]
@@ -142,18 +142,15 @@ def remove_duplicates(biom_tab_filt: biom.table,
     metadata_edit_best : pd.DataFrame
         Corresponding metadata table.
     """
+    metadata_filt = add_edit_and_working_sample_name(metadata_filt)
     if unique:
-        print(' - Remove duplicates:')
-        metadata_edit = add_edit_and_working_sample_name(metadata_filt)
-        metadata_edit_host = keep_the_best_host_subject_id_sample(metadata_edit)
-        metadata_edit_best = keep_the_best_root_sample_name_sample(metadata_edit_host)
-        biom_nodup = biom_tab_filt.filter(
-            ids_to_keep = metadata_edit_best['orig_sample_name'].tolist(),
-            axis = 'sample').copy()
-        biom_nodup.remove_empty(axis='observation', inplace=True)
-        return biom_nodup, metadata_edit_best
-    else:
-        return biom_tab_filt, metadata_filt
+        metadata_filt = keep_the_best_host_subject_id_sample(metadata_filt)
+    metadata_edit = keep_the_best_root_sample_name_sample(metadata_filt)
+    biom_nodup = biom_tab_filt.filter(
+        ids_to_keep=metadata_edit['orig_sample_name'].tolist(),
+        axis='sample').copy()
+    biom_nodup.remove_empty(axis='observation', inplace=True)
+    return biom_nodup, metadata_edit
 
 
 def check_replicates_amount(biom_tab_sams: list) -> None:

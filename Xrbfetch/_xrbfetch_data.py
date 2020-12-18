@@ -169,6 +169,7 @@ def run_redbiom_fetch(
         print(' '.join(cmd))
         subprocess.call(cmd)
         print('Done')
+        subprocess.call(['rm', redbiom_samples])
     return redbiom_output, redbiom_samples
 
 
@@ -288,9 +289,9 @@ def solve_ambiguous_preps(
     ambi_selection_noPrep = set(['.'.join(x.split('.')[:-1]) for x in ambi_selection])
     non_ambi = [x for x in ids if '.'.join(x.split('.')[:-1]) not in ambi_selection_noPrep]
     ids_to_keep = ambi_selection + non_ambi
-    print(' - Filter biom for best sample... ', end='')
+    print(' - Non-ambiguous + best of ambiguous ', end='')
     biom_tab.filter(ids_to_keep=ids_to_keep, axis='sample', inplace=True)
     biom_tab.remove_empty(axis='observation', inplace=True)
-    print('Done -> %s samples' % len(ids_to_keep))
+    print('= %s samples' % len(ids_to_keep))
     return biom_tab, ids_read_counts, ids_feat_counts
 

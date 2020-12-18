@@ -116,12 +116,15 @@ def read_meta_pd(metadata_file: str) -> pd.DataFrame:
             break
     header = line.strip()
     for sep in ['\t', ';', ',']:
-        if len(header.split(sep))>1 and len(header.split(sep)) == (header.count(sep)+1):
+        if len(header.split(sep)) > 1 and len(header.split(sep)) == (header.count(sep)+1):
             first_line = line.split(sep)
             break
     else:
-        print('no separator found among: "<tab>", ",", ";"\nExiting')
-        sys.exit(1)
+        if header == 'sample_name':
+            first_line = [header]
+        else:
+            print('no separator found among: "<tab>", ",", ";"\nExiting')
+            sys.exit(1)
 
     strs = {first_line[0]: 'str'}
     strs_up = {}
