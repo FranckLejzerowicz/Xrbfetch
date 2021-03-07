@@ -1,4 +1,0 @@
-sample_name	num	float	num_nan	num_str_ok	num_str_notok	cat_1	cat_nan	cat_str_ok
-A	1	4	7	9	11	xA1	xA2	xA3
-B	2	5		unknown	12	yA1		not applicable
-C	3	6	8	10	what_is_this	zC1	zC2	zC3

@@ -6,6 +6,6 @@
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
 
-from Xrbfetch._xrbfetch import xrbfetch
+from Xrbfetch.xrbfetch import xrbfetch
 
 __all__ = ["xrbfetch"]

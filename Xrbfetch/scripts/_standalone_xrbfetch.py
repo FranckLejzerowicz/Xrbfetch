@@ -8,7 +8,7 @@
 
 import click
 
-from Xrbfetch._xrbfetch import xrbfetch
+from Xrbfetch.xrbfetch import xrbfetch
 from Xrbfetch import __version__
 
 
@@ -62,7 +62,7 @@ from Xrbfetch import __version__
     help="Perform the steps using one-liners (less checks)."
 )
 @click.option(
-    "--verbose/--no-verbose", default=True, show_default=True,
+    "--verbose/--no-verbose", default=False, show_default=True,
     help="Show missing, non-fetched samples and duplicates."
 )
 @click.version_option(__version__, prog_name="Xrbfetch")
