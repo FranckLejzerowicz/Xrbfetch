@@ -344,7 +344,7 @@ def solve_ambiguous_preps(
 
     best_samples = []
     if json_ambi_rev:
-        print(' - Get best samples from ambiguous redbiom results... ', end='')
+        print('- Get best samples from ambiguous redbiom results... ', end='')
         # for each sample and its list of preps version
         for sam, amb_sams in json_ambi_rev.items():
             cur_best_samples = get_most_read_or_features(amb_sams, read_counts)
@@ -359,7 +359,7 @@ def solve_ambiguous_preps(
     non_ambiguous = [i for i in ids if i.rsplit('.', 1)[0] not in best_samples_noprep]
 
     ids_to_keep = best_samples + non_ambiguous
-    print(' - Non-ambiguous + best of ambiguous ', end='')
+    print('- Non-ambiguous + best of ambiguous ', end='')
     biom_tab.filter(ids_to_keep=ids_to_keep, axis='sample', inplace=True)
     biom_tab.remove_empty(axis='observation', inplace=True)
     print('Done -> %s samples' % len(ids_to_keep))
