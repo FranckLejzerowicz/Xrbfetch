@@ -65,10 +65,13 @@ def keep_the_best_root_sample_name_sample(metadata_edit_host: pd.DataFrame) -> p
         with only one sample per host and per sample
     """
     metadata_edit_best = metadata_edit_host.copy()
+    print(metadata_edit_best[:3])
     best_samples = []
-    print(' - Keep the best working_sample_name per sample... ', end='')
+    print('- Keep the best working_sample_name per sample... ', end='')
     for working_sample_name, subtab in metadata_edit_best.groupby('working_sample_name'):
         curr_subtab = subtab[['read_count', 'feature_count', 'edit_sample_name']]
+        print(curr_subtab[:3])
+        print(curr_subtabfdsa)
         max_read_count_sample = curr_subtab.loc[curr_subtab.read_count == max(curr_subtab.read_count)]
         if max_read_count_sample.shape[0] > 1:
             max_feat_count_sample = max_read_count_sample.loc[
@@ -116,9 +119,10 @@ def keep_the_best_host_subject_id_sample(
     return metadata_edit_host
 
 
-def remove_duplicates(biom_tab_filt: biom.table,
-                      metadata_filt: pd.DataFrame,
-                      unique: bool) -> tuple:
+def remove_duplicates(
+        biom_tab_filt: biom.table,
+        metadata_filt: pd.DataFrame,
+        unique: bool) -> tuple:
     """
     Remove duplicates (host and sample preps).
 
