@@ -104,14 +104,16 @@ def keep_the_best_host_subject_id_sample(
     """
     metadata_edit_host = metadata_edit.copy()
     if max(metadata_edit_host.host_subject_id.value_counts()) == 1:
+        print('- Already one sample per host_subject_id ', end='')
         return metadata_edit_host
-    print('- Keep the best sample per host_subject_id... ', end='')
-    metadata_edit_host.sort_values(
-        ['read_count', 'feature_count'],
-        ascending=False,
-        inplace=True)
-    metadata_edit_host = metadata_edit_host[
-        ~metadata_edit_host.host_subject_id.duplicated()]
+    else:
+        print('- Keep the best sample per host_subject_id... ', end='')
+        metadata_edit_host.sort_values(
+            ['read_count', 'feature_count'],
+            ascending=False,
+            inplace=True)
+        metadata_edit_host = metadata_edit_host[
+            ~metadata_edit_host.host_subject_id.duplicated()]
     print('Done -> %s samples' % metadata_edit_host.shape[0])
     return metadata_edit_host
 
