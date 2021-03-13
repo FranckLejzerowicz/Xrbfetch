@@ -105,7 +105,6 @@ def keep_the_best_host_subject_id_sample(
     metadata_edit_host = metadata_edit.copy()
     if max(metadata_edit_host.host_subject_id.value_counts()) == 1:
         print('- Already one sample per host_subject_id ', end='')
-        return metadata_edit_host
     else:
         print('- Keep the best sample per host_subject_id... ', end='')
         metadata_edit_host.sort_values(
