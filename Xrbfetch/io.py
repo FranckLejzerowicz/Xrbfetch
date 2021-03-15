@@ -9,6 +9,7 @@
 import os
 import json
 import biom
+import datetime
 import subprocess
 import pandas as pd
 
@@ -160,7 +161,8 @@ def make_samples_list_tmp(m_metadata_file: str,
         Path to the file passed to redbiom and
         containing the samples in one list.
     """
-    redbiom_samples = '%s_redbiom_sams.tmp' % splitext(m_metadata_file)[0]
+    timetoken = str(datetime.datetime.now()).split('.')[0].replace(' ', '-').replace(':', '-')
+    redbiom_samples = '%s_redbiom_sams_%s.tmp' % (splitext(m_metadata_file)[0], timetoken)
     with open(redbiom_samples, 'w') as o:
         for feature_name in metadata.sample_name:
             o.write('%s\n' % feature_name)
