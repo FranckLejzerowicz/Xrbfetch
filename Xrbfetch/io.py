@@ -210,6 +210,8 @@ def delete_files(
     ----------
     redbiom_output : str
         Path to fetched biom file.
+    redbiom_samples : str
+        Path to samples to fetch.
     """
     if isfile(redbiom_output):
         os.remove(redbiom_output)

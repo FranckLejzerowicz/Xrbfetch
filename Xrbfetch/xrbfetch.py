@@ -92,7 +92,7 @@ def xrbfetch(
         summary = [['Fetching samples from redbiom', metadata['sample_name'].nunique()]]
         # Fetch the samples using redbiom
         redbiom_output, redbiom_samples = run_redbiom_fetch(
-            metadata, m_metadata_file, p_redbiom_context, force)
+            metadata, m_metadata_file, o_metadata_file, p_redbiom_context, force)
 
         # Read biom file and show non fetched samples and replication amount
         biom_tab = read_biom(redbiom_output)

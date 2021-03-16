@@ -151,8 +151,9 @@ def filter_reads(
 def run_redbiom_fetch(
         metadata: pd.DataFrame,
         m_metadata_file: str,
+        o_metadata_file: str,
         p_redbiom_context: str,
-        force: bool) -> (str, str):
+        force: bool) -> tuple:
     """
     Fetch the samples using RedBiom.
 
@@ -161,6 +162,8 @@ def run_redbiom_fetch(
     metadata : pd.DataFrame
         Metadata for the included samples only.
     m_metadata_file : str
+        Path to input metadata for the included samples only.
+    o_metadata_file : str
         Path to output metadata for the included samples only.
     p_redbiom_context : str
         Redbiom context for fetching 16S data from Qiita.
@@ -172,7 +175,8 @@ def run_redbiom_fetch(
     """
     # define temporary files: for sample_ids file and redbiom output
     timetoken = str(datetime.datetime.now()).split('.')[0].replace(' ', '-').replace(':', '-')
-    redbiom_output = '%s_redbiom_%s_%s.biom' % (splitext(m_metadata_file)[0], p_redbiom_context, timetoken)
+    redbiom_output = '%s_redbiom_%s_%s.biom' % (splitext(o_metadata_file)[0], p_redbiom_context, timetoken)
+    redbiom_samples = ''
     if not force and isfile(redbiom_output):
         print('Using an already generated biom file for this metadata file:\n '
               '-> %s (%s samples) <-' % (redbiom_output, metadata.shape[0]))
