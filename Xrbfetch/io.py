@@ -245,6 +245,7 @@ def read_json_ambiguities_file(
     redbiom_output : str
         Path to json file.
     """
+    json_ambi = {}
     json_ambi_fp = '%s.ambiguities' % redbiom_output
     if isfile(json_ambi_fp):
         with open(json_ambi_fp) as f:

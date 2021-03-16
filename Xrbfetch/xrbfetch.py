@@ -96,6 +96,7 @@ def xrbfetch(
 
         # Read biom file and show non fetched samples and replication amount
         biom_tab = read_biom(redbiom_output)
+        print(biom_tab)
         summary.append(['Samples in the fetched biom table (all preps)', biom_tab.shape[0]])
         if verbose:
             check_fetched_samples(list(metadata['sample_name']), biom_tab)
