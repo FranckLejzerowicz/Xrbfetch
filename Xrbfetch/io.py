@@ -141,6 +141,7 @@ def read_meta_pd(metadata_file: str) -> pd.DataFrame:
 
 def make_samples_list_tmp(m_metadata_file: str,
                           metadata: pd.DataFrame,
+                          context: str,
                           timetoken: str) -> str:
     """
     Create the file passed to redbiom and
@@ -151,10 +152,10 @@ def make_samples_list_tmp(m_metadata_file: str,
     m_metadata_file : str
         Path to metadata file containing
         the samples to fetch and filter.
-
     metadata : pd.DataFrame
         Metadata table.
-
+    context : str
+        Redbiom context for fetching 16S data from Qiita.
     timetoken : str
         Time stamp for unique file naming.
 
@@ -164,7 +165,8 @@ def make_samples_list_tmp(m_metadata_file: str,
         Path to the file passed to redbiom and
         containing the samples in one list.
     """
-    redbiom_samples = '%s_redbiom_sams_%s.tmp' % (splitext(m_metadata_file)[0], timetoken)
+    redbiom_samples = '%s_redbiom_sams_%s_%s.tmp' % (
+        splitext(m_metadata_file)[0], context, timetoken)
     with open(redbiom_samples, 'w') as o:
         for feature_name in metadata.sample_name:
             o.write('%s\n' % feature_name)
@@ -196,11 +198,11 @@ def run_fetch(
     ]
     subprocess.call(cmd)
     print(' '.join(cmd))
-    os.remove(redbiom_samples)
 
 
 def delete_files(
-        redbiom_output: str) -> None:
+        redbiom_output: str,
+        redbiom_samples: str) -> None:
     """
     Delete intermediate metadata files.
 
@@ -214,6 +216,9 @@ def delete_files(
     redbiom_output_amb = '%s.ambiguities' % splitext(redbiom_output)[0]
     if isfile(redbiom_output_amb):
         os.remove(redbiom_output_amb)
+    if isfile(redbiom_samples):
+        os.remove(redbiom_samples)
+
 
 
 def write_summary(

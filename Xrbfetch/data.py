@@ -152,7 +152,7 @@ def run_redbiom_fetch(
         metadata: pd.DataFrame,
         m_metadata_file: str,
         p_redbiom_context: str,
-        force: bool) -> str:
+        force: bool) -> (str, str):
     """
     Fetch the samples using RedBiom.
 
@@ -181,12 +181,12 @@ def run_redbiom_fetch(
         if p_redbiom_context:
             context = p_redbiom_context
 
-        redbiom_samples = make_samples_list_tmp(m_metadata_file, metadata, timetoken)
+        redbiom_samples = make_samples_list_tmp(m_metadata_file, metadata, context, timetoken)
         print('Fetching %s samples from redbiom... ' % metadata.shape[0], end='')
         run_fetch(redbiom_samples, context, redbiom_output)
         print('Done')
 
-    return redbiom_output
+    return redbiom_output, redbiom_samples
 
 
 def remove_blooms(

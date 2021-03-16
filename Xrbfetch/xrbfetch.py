@@ -91,7 +91,7 @@ def xrbfetch(
         metadata = read_meta_pd(m_metadata_file)
         summary = [['Fetching samples from redbiom', metadata['sample_name'].nunique()]]
         # Fetch the samples using redbiom
-        redbiom_output = run_redbiom_fetch(
+        redbiom_output, redbiom_samples = run_redbiom_fetch(
             metadata, m_metadata_file, p_redbiom_context, force)
 
         # Read biom file and show non fetched samples and replication amount
@@ -138,4 +138,4 @@ def xrbfetch(
         write_summary(o_summary_file, summary)
 
         # delete intermediate files
-        delete_files(m_metadata_file, redbiom_output)
+        delete_files(redbiom_output, redbiom_samples)
