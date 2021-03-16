@@ -139,4 +139,4 @@ def xrbfetch(
         write_summary(o_summary_file, summary)
 
         # delete intermediate files
-        delete_files(m_metadata_file)
+        delete_files(m_metadata_file, redbiom_output)

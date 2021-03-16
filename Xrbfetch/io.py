@@ -200,20 +200,20 @@ def run_fetch(
 
 
 def delete_files(
-        m_metadata_file: str) -> None:
+        redbiom_output: str) -> None:
     """
     Delete intermediate metadata files.
 
     Parameters
     ----------
-    m_metadata_file : str
-        Path to metadata file containing
-        the samples ot fetch and filter.
+    redbiom_output : str
+        Path to fetched biom file.
     """
-    redbiom_fp = '%s_redbiom.biom' % splitext(m_metadata_file)[0]
-    os.remove(redbiom_fp)
-    redbiom_amb_fp = '%s_redbiom.biom.ambiguities' % splitext(m_metadata_file)[0]
-    os.remove(redbiom_amb_fp)
+    if isfile(redbiom_output):
+        os.remove(redbiom_output)
+    redbiom_output_amb = '%s.ambiguities' % splitext(redbiom_output)[0]
+    if isfile(redbiom_output_amb):
+        os.remove(redbiom_output_amb)
 
 
 def write_summary(
