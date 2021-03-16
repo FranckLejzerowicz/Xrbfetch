@@ -7,6 +7,7 @@
 # ----------------------------------------------------------------------------
 
 import biom
+import datetime
 import pandas as pd
 import pkg_resources
 
@@ -170,7 +171,8 @@ def run_redbiom_fetch(
         Path to the biom table returned by redbiom.
     """
     # define temporary files: for sample_ids file and redbiom output
-    redbiom_output = '%s_redbiom_%s.biom' % (splitext(m_metadata_file)[0], p_redbiom_context)
+    timetoken = str(datetime.datetime.now()).split('.')[0].replace(' ', '-').replace(':', '-')
+    redbiom_output = '%s_redbiom_%s_%s.biom' % (splitext(m_metadata_file)[0], p_redbiom_context, timetoken)
     if not force and isfile(redbiom_output):
         print('Using an already generated biom file for this metadata file:\n '
               '-> %s (%s samples) <-' % (redbiom_output, metadata.shape[0]))
@@ -179,7 +181,7 @@ def run_redbiom_fetch(
         if p_redbiom_context:
             context = p_redbiom_context
 
-        redbiom_samples = make_samples_list_tmp(m_metadata_file, metadata)
+        redbiom_samples = make_samples_list_tmp(m_metadata_file, metadata, timetoken)
         print('Fetching %s samples from redbiom... ' % metadata.shape[0], end='')
         run_fetch(redbiom_samples, context, redbiom_output)
         print('Done')
