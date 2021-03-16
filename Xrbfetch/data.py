@@ -170,7 +170,7 @@ def run_redbiom_fetch(
         Path to the biom table returned by redbiom.
     """
     # define temporary files: for sample_ids file and redbiom output
-    redbiom_output = '%s_redbiom.biom' % splitext(m_metadata_file)[0]
+    redbiom_output = '%s_redbiom_%s.biom' % (splitext(m_metadata_file)[0], p_redbiom_context)
     if not force and isfile(redbiom_output):
         print('Using an already generated biom file for this metadata file:\n '
               '-> %s (%s samples) <-' % (redbiom_output, metadata.shape[0]))
