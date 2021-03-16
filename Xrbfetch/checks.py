@@ -6,7 +6,9 @@
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
 
+import sys
 import biom
+from Xrbfetch.io import write_summary, delete_files
 
 
 def check_fetched_samples(metadata_sams: list, biom_tab: biom.Table) -> None:
@@ -31,8 +33,8 @@ def check_replicates_amount(biom_tab: biom.Table) -> None:
     """
     Parameters
     ----------
-    biom_tab_sams : list
-        Samples of the feature table.
+    biom_tab : biom.Table
+        Biom table.
     """
     dups = {}
     for sam in biom_tab.ids(axis='sample'):
@@ -47,3 +49,21 @@ def check_replicates_amount(biom_tab: biom.Table) -> None:
         print(' * Sample ID duplication (without prep number):')
         for n, sams in sorted(dups_to_print.items(), key=lambda x: len(x[1])):
             print('     --> %s samples have %s replicates' % (len(sams), n))
+
+
+def potential_stop(
+        biom_tab: biom.Table,
+        o_summary_file: str,
+        summary: list,
+        redbiom_output: str,
+        redbiom_samples: str,
+        do_stop: bool = False):
+
+    if not biom_tab.shape[0] or do_stop:
+        # write the metadata and the biom table outputs
+        write_summary(o_summary_file, summary)
+        # delete intermediate files
+        delete_files(redbiom_output, redbiom_samples)
+        sys.exit(0)
+
+

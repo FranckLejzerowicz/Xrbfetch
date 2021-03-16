@@ -10,14 +10,12 @@ from os.path import abspath, splitext
 import pkg_resources
 
 from Xrbfetch.simple import run_simple
-from Xrbfetch.io import (
-    read_meta_pd, read_biom, write_outputs,
-    write_summary, delete_files)
+from Xrbfetch.io import read_meta_pd, read_biom, write_outputs
 from Xrbfetch.data import (
     run_redbiom_fetch, remove_blooms, get_reads_features_counts, solve_ambiguous_preps,
     merge_read_features_counts, filter_reads, update_sample_name
 )
-from Xrbfetch.checks import check_fetched_samples, check_replicates_amount
+from Xrbfetch.checks import check_fetched_samples, check_replicates_amount, potential_stop
 from Xrbfetch.duplicates import remove_duplicates
 
 RESOURCES = pkg_resources.resource_filename('Xrbfetch', 'resources')
@@ -96,6 +94,8 @@ def xrbfetch(
 
         # Read biom file and show non fetched samples and replication amount
         biom_tab = read_biom(redbiom_output)
+        potential_stop(biom_tab, o_summary_file, summary, redbiom_output, redbiom_samples)
+
         summary.append(['Samples in the fetched biom table (all preps)', biom_tab.shape[0]])
         if verbose:
             check_fetched_samples(list(metadata['sample_name']), biom_tab)
@@ -105,6 +105,7 @@ def xrbfetch(
         if p_bloom_sequences != 'no':
             biom_tab = remove_blooms(biom_tab, p_bloom_sequences)
             summary.append(['Filtered blooms sequences', biom_tab.shape[1]])
+        potential_stop(biom_tab, o_summary_file, summary, redbiom_output, redbiom_samples)
 
         read_counts, feat_counts = get_reads_features_counts(biom_tab)
 
@@ -113,6 +114,7 @@ def xrbfetch(
             redbiom_output, biom_tab, read_counts, feat_counts)
         summary.append(['Get most-reads (or most-features) sample from ambiguous samples',
                         biom_tab_no_ambi.shape[1]])
+        potential_stop(biom_tab_no_ambi, o_summary_file, summary, redbiom_output, redbiom_samples)
 
         # Merge reads and features count to metadata
         metadata_counts = merge_read_features_counts(
@@ -122,11 +124,13 @@ def xrbfetch(
         biom_tab_filt, metadata_filt = filter_reads(
             metadata_counts, biom_tab_no_ambi, p_reads_filter)
         summary.append(['Filter biom for min %s reads per sample' % p_reads_filter, biom_tab_filt.shape[1]])
+        potential_stop(biom_tab_filt, o_summary_file, summary, redbiom_output, redbiom_samples)
 
         # Remove duplicates (host and sample preps).
         biom_nodup, metadata_edit_best = remove_duplicates(
             biom_tab_filt, metadata_filt, unique)
         summary.append(['Keep the best sample per "host_subject_id"', biom_nodup.shape[1]])
+        potential_stop(biom_nodup, o_summary_file, summary, redbiom_output, redbiom_samples)
 
         # Update the biom sample name.
         biom_updated = update_sample_name(update, biom_nodup)
@@ -135,7 +139,5 @@ def xrbfetch(
         write_outputs(
             o_biom_file, o_metadata_file, biom_updated,
             metadata_edit_best, dim)
-        write_summary(o_summary_file, summary)
 
-        # delete intermediate files
-        delete_files(redbiom_output, redbiom_samples)
+        potential_stop(biom_tab, o_summary_file, summary, redbiom_output, redbiom_samples, True)

@@ -56,7 +56,7 @@ def write_outputs(
         o_metadata_file: str,
         biom_updated: biom.Table,
         metadata_edit_best: pd.DataFrame,
-        dim: bool) -> None:
+        dim: bool = False) -> None:
     """
     Write the metadata and the biom table outputs.
 
@@ -81,18 +81,19 @@ def write_outputs(
         o_metadata_file, o_biom_file = get_outputs(
             metadata_edit_best, o_metadata_file, o_biom_file)
 
-    print('Outputs:')
-    if o_metadata_file[0] == '/':
-        if not isdir(dirname(o_metadata_file)):
-            os.makedirs(dirname(o_metadata_file))
-    metadata_edit_best.to_csv(o_metadata_file, index=False, sep='\t')
-    print(o_metadata_file)
+    if biom_updated.shape[0]:
+        print('Outputs:')
+        if o_metadata_file[0] == '/':
+            if not isdir(dirname(o_metadata_file)):
+                os.makedirs(dirname(o_metadata_file))
+        metadata_edit_best.to_csv(o_metadata_file, index=False, sep='\t')
+        print(o_metadata_file)
 
-    if not isdir(dirname(o_biom_file)):
-        os.makedirs(dirname(o_biom_file))
-    with biom_open(o_biom_file, 'w') as f:
-        biom_updated.to_hdf5(f, 'Xrbfetch')
-    print(o_biom_file)
+        if not isdir(dirname(o_biom_file)):
+            os.makedirs(dirname(o_biom_file))
+        with biom_open(o_biom_file, 'w') as f:
+            biom_updated.to_hdf5(f, 'Xrbfetch')
+        print(o_biom_file)
 
 
 def read_biom(redbiom_output: str) -> biom.Table:
@@ -220,7 +221,6 @@ def delete_files(
         os.remove(redbiom_output_amb)
     if isfile(redbiom_samples):
         os.remove(redbiom_samples)
-
 
 
 def write_summary(
