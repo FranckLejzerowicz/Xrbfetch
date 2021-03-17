@@ -216,7 +216,7 @@ def delete_files(
     """
     if isfile(redbiom_output):
         os.remove(redbiom_output)
-    redbiom_output_amb = '%s.ambiguities' % splitext(redbiom_output)[0]
+    redbiom_output_amb = '%s.biom.ambiguities' % splitext(redbiom_output)[0]
     if isfile(redbiom_output_amb):
         os.remove(redbiom_output_amb)
     if isfile(redbiom_samples):
