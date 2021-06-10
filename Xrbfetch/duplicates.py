@@ -41,7 +41,7 @@ def add_edit_and_working_sample_name(
                                      sam_agp[:-1],
                                      sam.split('.')[-1])
             edit_sample_names.append(sam_edit)
-            working_sample_names.append(str(int(sam_agp[:-1])))
+            working_sample_names.append(sam_agp[:-1])
 
     metadata_edit['edit_sample_name'] = edit_sample_names
     metadata_edit['working_sample_name'] = working_sample_names
