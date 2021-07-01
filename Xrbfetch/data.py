@@ -44,13 +44,15 @@ def update_sample_name(
     """
     if update:
         ids_map = {}
+        ids_res = []
         for sam in biom_nodup.ids(axis='sample'):
             if str(sam.split('.')[1]).isdigit():
                 updated_sam = '.'.join(sam.split('.')[:2])
             else:
                 updated_sam = '.'.join(sam.split('.')[:2])[:-1]
-            print(sam, updated_sam)
+            ids_res.append([sam, updated_sam])
             ids_map[sam] = updated_sam
+        print(pd.DataFrame(ids_res)[1].value_counts())
         print('- Update sample name to remove prep file info... ', end='')
         biom_nodup.update_ids(id_map=ids_map, axis='sample', inplace=True)
         print('Done')
