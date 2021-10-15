@@ -221,6 +221,7 @@ def remove_blooms(
         bloom_sequences_fp = abspath(p_bloom_sequences)
     bloom_seqs = set([x.strip()[:length] for x in open(
         bloom_sequences_fp).readlines() if x[0] != '>'])
+    print(bloom_seqs)
 
     in_out = {'in': [], 'out': []}
     for feature in biom_tab.ids(axis='observation'):
