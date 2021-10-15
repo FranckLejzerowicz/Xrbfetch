@@ -72,7 +72,10 @@ class TestData(unittest.TestCase):
         self.biom_with_bloom_2nt = Table(
             np.array([[1, 1, 1], [1, 1, 0]]),
             ['C', 'T'], ['a', 'b', 'c'])
-        self.biom_with_nobloom = Table(
+        self.biom_with_nobloom_1nt = Table(
+            np.array([[1, 1]]),
+            ['T'], ['a', 'b'])
+        self.biom_with_nobloom_2nt = Table(
             np.array([[1, 1]]),
             ['TT'], ['a', 'b'])
         self.bloom_sammple = ['c']
@@ -111,14 +114,14 @@ class TestData(unittest.TestCase):
 
     def test_remove_blooms(self):
         biom_tab = remove_blooms(
-            2, self.biom_with_nobloom, self.bloom_sequences)
-        self.assertEqual(self.biom_with_nobloom, biom_tab)
+            2, self.biom_with_nobloom_2nt, self.bloom_sequences)
+        self.assertEqual(self.biom_with_nobloom_2nt, biom_tab)
         biom_tab = remove_blooms(
             2, self.biom_with_bloom_2nt, self.bloom_sequences)
-        self.assertEqual(self.biom_with_nobloom, biom_tab)
+        self.assertEqual(self.biom_with_nobloom_2nt, biom_tab)
         biom_tab = remove_blooms(
             1, self.biom_with_bloom_1nt, self.bloom_sequences)
-        self.assertEqual(self.biom_with_nobloom, biom_tab)
+        self.assertEqual(self.biom_with_nobloom_1nt, biom_tab)
 
     def test_get_reads_features_counts(self):
         # because the counts are dummy counts set to 1; reads counts = features counts...
