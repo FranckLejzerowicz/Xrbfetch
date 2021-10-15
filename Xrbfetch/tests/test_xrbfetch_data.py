@@ -134,10 +134,12 @@ class TestData(unittest.TestCase):
         read_counts, feat_counts = get_reads_features_counts(self.biom_tab_no_ambi_out_updated)
         self.assertEqual(read_counts, {'b.2': 2, 'c.3': 2})
         self.assertEqual(feat_counts, {'b.2': 2, 'c.3': 2})
-        read_counts, feat_counts = get_reads_features_counts(self.biom_with_bloom)
+        read_counts, feat_counts = get_reads_features_counts(
+            self.biom_with_bloom_2nt)
         self.assertEqual(read_counts, {'a': 2, 'b': 2, 'c': 1})
         self.assertEqual(feat_counts, {'a': 2, 'b': 2, 'c': 1})
-        read_counts, feat_counts = get_reads_features_counts(self.biom_with_nobloom)
+        read_counts, feat_counts = get_reads_features_counts(
+            self.biom_with_bloom_2nt)
         self.assertEqual(read_counts, {'a': 1, 'b': 1})
         self.assertEqual(feat_counts, {'a': 1, 'b': 1})
 
