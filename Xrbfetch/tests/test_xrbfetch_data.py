@@ -66,9 +66,12 @@ class TestData(unittest.TestCase):
             np.array([[1, 1], [1, 1]]),
             ['CC', 'GG'], ['b.2', 'c.3'])
 
-        self.biom_with_bloom = Table(
+        self.biom_with_bloom_1nt = Table(
             np.array([[1, 1, 1], [1, 1, 0]]),
             ['CC', 'TT'], ['a', 'b', 'c'])
+        self.biom_with_bloom_2nt = Table(
+            np.array([[1, 1, 1], [1, 1, 0]]),
+            ['C', 'T'], ['a', 'b', 'c'])
         self.biom_with_nobloom = Table(
             np.array([[1, 1]]),
             ['TT'], ['a', 'b'])
@@ -108,7 +111,13 @@ class TestData(unittest.TestCase):
 
     def test_remove_blooms(self):
         biom_tab = remove_blooms(
-            self.biom_with_bloom, self.bloom_sequences)
+            2, self.biom_with_nobloom, self.bloom_sequences)
+        self.assertEqual(self.biom_with_nobloom, biom_tab)
+        biom_tab = remove_blooms(
+            2, self.biom_with_bloom_2nt, self.bloom_sequences)
+        self.assertEqual(self.biom_with_nobloom, biom_tab)
+        biom_tab = remove_blooms(
+            1, self.biom_with_bloom_1nt, self.bloom_sequences)
         self.assertEqual(self.biom_with_nobloom, biom_tab)
 
     def test_get_reads_features_counts(self):

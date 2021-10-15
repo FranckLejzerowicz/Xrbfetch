@@ -103,7 +103,8 @@ def xrbfetch(
 
         # Remove the bloom sequences from the fetched samples.
         if p_bloom_sequences != 'no':
-            biom_tab = remove_blooms(biom_tab, p_bloom_sequences)
+            length = int(p_redbiom_context.split('-')[-2][:-2])
+            biom_tab = remove_blooms(biom_tab, length, p_bloom_sequences)
             summary.append(['Filtered blooms sequences', biom_tab.shape[1]])
         potential_stop(biom_tab, o_summary_file, summary, redbiom_output, redbiom_samples)
 

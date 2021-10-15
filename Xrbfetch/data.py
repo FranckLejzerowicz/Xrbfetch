@@ -193,6 +193,7 @@ def run_redbiom_fetch(
 
 
 def remove_blooms(
+        length: int,
         biom_tab: biom.Table,
         p_bloom_sequences: str) -> biom.Table:
     """
@@ -200,6 +201,8 @@ def remove_blooms(
 
     Parameters
     ----------
+    length : int
+        Length of the fetched sequences to filter.
     biom_tab : biom.table
         Feature table retrieved from redbiom.
     p_bloom_sequences : str
@@ -216,9 +219,8 @@ def remove_blooms(
     bloom_sequences_fp = '%s/newblooms.all.fasta' % RESOURCES
     if p_bloom_sequences:
         bloom_sequences_fp = abspath(p_bloom_sequences)
-    bloom_seqs = set([x.strip() for x in open(bloom_sequences_fp).readlines()
-                      if x[0] != '>'])
-    print(bloom_seqs)
+    bloom_seqs = set([x.strip()[:length] for x in open(
+        bloom_sequences_fp).readlines() if x[0] != '>'])
 
     in_out = {'in': [], 'out': []}
     for feature in biom_tab.ids(axis='observation'):
